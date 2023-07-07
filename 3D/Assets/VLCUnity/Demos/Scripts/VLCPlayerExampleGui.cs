@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -54,8 +55,9 @@ public class VLCPlayerExampleGui : MonoBehaviour
 
 	void Start()
 	{
-		//VLC Event Handlers
-		vlcPlayer.mediaPlayer.Playing += (object sender, EventArgs e) => {
+		
+        //VLC Event Handlers
+        vlcPlayer.mediaPlayer.Playing += (object sender, EventArgs e) => {
 			//Always use Try/Catch for VLC Events
 			try
 			{
@@ -63,9 +65,7 @@ public class VLCPlayerExampleGui : MonoBehaviour
 				//A simple way around this is to set flag variables which cause functions to be called on the next Update
 				_isPlaying = true;//Switch to the Pause button next update
 				_shouldUpdateTracks = true;//Regenerate tracks next update
-
-
-			}
+            }
 			catch (Exception ex)
 			{
 				Debug.LogError("Exception caught in mediaPlayer.Play: \n" + ex.ToString());
@@ -77,20 +77,20 @@ public class VLCPlayerExampleGui : MonoBehaviour
 			try
 			{
 				_isPlaying = false;//Switch to the Play button next update
-			}
+            }
 			catch (Exception ex)
 			{
 				Debug.LogError("Exception caught in mediaPlayer.Paused: \n" + ex.ToString());
 			}
 		};
 
-		vlcPlayer.mediaPlayer.Stopped += (object sender, EventArgs e) => {
+        vlcPlayer.mediaPlayer.Stopped += (object sender, EventArgs e) => {
 			//Always use Try/Catch for VLC Events
 			try
 			{
 				_isPlaying = false;//Switch to the Play button next update
 				_shouldClearTracks = true;//Clear tracks next update
-			}
+            }
 			catch (Exception ex)
 			{
 				Debug.LogError("Exception caught in mediaPlayer.Stopped: \n" + ex.ToString());
@@ -140,8 +140,7 @@ public class VLCPlayerExampleGui : MonoBehaviour
 		volumeBar.value = vlcPlayer.Volume;
 		volumeBar.onValueChanged.AddListener((data) => { vlcPlayer.SetVolume((int)volumeBar.value);	});
 		volumeBar.gameObject.SetActive(false);
-
-	}
+    }
 
 	void Update()
 	{
@@ -183,7 +182,7 @@ public class VLCPlayerExampleGui : MonoBehaviour
 			var duration = vlcPlayer.Duration;
 			if (duration > 0)
 				seekBar.value = (float)((double)vlcPlayer.Time / duration);
-		}
+        }
 	}
 
 	//Enable a GameObject if it is disabled, or disable it if it is enabled
@@ -205,18 +204,17 @@ public class VLCPlayerExampleGui : MonoBehaviour
 
 	}
 
-	//Clear the track buttons menu
-	void ClearTrackButtons()
-	{
-		var childCount = tracksButtonsGroup.transform.childCount;
-		for (int i = 0; i < childCount; i++)
-		{
-			Destroy(tracksButtonsGroup.transform.GetChild(i).gameObject);
-		}
-	}
+    //Clear the track buttons menu
+    void ClearTrackButtons()
+    {
+        foreach (Transform child in tracksButtonsGroup.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
 
-	//Create Audio, Video, or Subtitle button groups
-	void SetupTrackButtonsGroup(TrackType type, string label, List<Button> buttonList, bool includeNone = false)
+    //Create Audio, Video, or Subtitle button groups
+    void SetupTrackButtonsGroup(TrackType type, string label, List<Button> buttonList, bool includeNone = false)
 	{
 		buttonList.Clear();
 		var tracks = vlcPlayer.Tracks(type);
@@ -242,7 +240,6 @@ public class VLCPlayerExampleGui : MonoBehaviour
 				newButton.onClick.AddListener(() => {
 					foreach (var button in buttonList)
 						button.GetComponentInChildren<Text>().color = unselectedButtonColor;
-					textMeshPro.color = selectedButtonColor;
 					vlcPlayer.Select(track);
 				});
 			}
