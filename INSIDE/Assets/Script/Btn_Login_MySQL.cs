@@ -6,73 +6,102 @@ using System.Text;
 using System.Security.Cryptography;
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
+using TMPro;
+
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using Unity.VisualScripting;
+using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 public class Btn_Login_MySQL : MonoBehaviour
 {
-    public static MySqlConnection SqlConn;
-    public string ipAddress = "127.0.0.1";
-    public string db_port = "3306";
-    public string db_id = "root";
-    public string db_pw = "12345";
-    public string db_name = "iot1team";
-    public bool pooling = true;
+    // 데이터베이스 연결에 필요한 정보를 설정합니다.
+    public string ipAddress = "127.0.0.1";  // 데이터베이스 서버 IP 주소
+    public string db_port = "3306";        // 데이터베이스 포트 번호
+    public string db_id = "root";          // 데이터베이스 접속 ID
+    public string db_pw = "12345";         // 데이터베이스 접속 비밀번호
+    public string db_name = "iot1team";    // 사용할 데이터베이스 이름
+    public bool pooling = true;           // 데이터베이스 연결 풀링 여부
 
     private string conn_string;
     private MySqlConnection con = null;
     private MySqlCommand cmd = null;
     private MySqlDataReader rdr = null;
-    // public GameObject Btn_Login; // Pnl_Hb_Menu 패널을 Inspector에서 연결해주세요.
-    // private bool isMenuVisible = false;
-
-    void Awake()
+    public TMP_Text Btn_Login_ID_Text;
+    public TMP_Text Btn_Login_PW_Text;
+    private void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
-        conn_string = "Server=" + ipAddress + ";Database=" + db_name + ";User=" + db_id + ";Password=" + db_pw + ";Pooling=";
+        // 데이터베이스 연결 문자열을 설정
+        conn_string = "Server=" + ipAddress + ";Port=" + db_port + ";Database=" + db_name + ";User=" + db_id + ";Password=" + db_pw;
+    }
 
-        if (pooling)
+    private void OnApplicationQuit()
+    {
+        // 애플리케이션이 종료될 때 데이터베이스 연결을 닫습니다.
+        if (con != null)
         {
-            conn_string += "True";
+            if (con.State != ConnectionState.Closed)
+            {
+                con.Close();
+                Debug.Log("Mysql connection closed");
+            }
+            con.Dispose();
         }
-        else
-        {
-            conn_string += "False";
-        }
+    }
+
+    // 이 메서드는 LOGINButton이 클릭될 때 호출
+    public void OnLoginButtonClick()
+    {
         try
         {
+            // 데이터베이스 연결을 시도
             con = new MySqlConnection(conn_string);
             con.Open();
             Debug.Log("Mysql state: " + con.State);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
 
-            string sql = "SELECT * FROM user_base";
-            cmd = new MySqlCommand(sql, con);
+        try
+        {
+            // 데이터베이스에서 데이터를 가져올 SQL 쿼리를 작성
+            string sql = string.Format("SELECT id, password, admin FROM account_parking WHERE id = '{0}' AND password = '{1}' AND admin = '0';", Btn_Login_ID_Text.text, Btn_Login_PW_Text.text);
             cmd = new MySqlCommand(sql, con);
             rdr = cmd.ExecuteReader();
 
-            while (rdr.Read())
+            // 쿼리 결과를 읽어와서 Unity 콘솔에 로그로 출력
+            while (rdr.Read() == true)
             {
-                Debug.Log("???");
-                Debug.Log(rdr[0] + " -- " + rdr[1]);
+                Debug.Log($"rdr[0].ToString(): '{rdr[0].ToString()}'");
+                Debug.Log($"Btn_Login_ID_Text.text: '{Btn_Login_ID_Text.text}'");
+
+                if (rdr[0].ToString() == Btn_Login_ID_Text.text && 
+                    rdr[1].ToString() == Btn_Login_PW_Text.text &&
+                    rdr[2].ToString() == "0")
+                {
+                    // 로그인 성공 시 처리
+                    SceneManager.LoadScene("UI_SC");
+                    SceneManager.LoadScene("INSIDE_SC", LoadSceneMode.Additive);
+                    SceneManager.UnloadSceneAsync("LOGIN_SC");
+                    break; // 로그인 성공했으므로 더 이상 확인할 필요가 없으므로 반복문을 종료합니다.
+                }
+            }
+            if (rdr.Read() == false)
+            {
+                // 로그인 실패 시 처리
+                Debug.Log("아이디" + rdr[0] + "비밀번호" + rdr[1]);
+                Debug.Log("아이디와 비밀번호를 확인해주세요.");
             }
             rdr.Close();
         }
         catch (Exception e)
         {
             Debug.Log(e.Message);
-        }
-    }
-
-    void onApplicationQuit()
-    {
-        if (con != null)
-        {
-            if (con.State.ToString() != "Closed")
-            {
-                con.Close();
-                Debug.Log("Mysql connection closed");
-            }
-            con.Dispose();
         }
     }
 }

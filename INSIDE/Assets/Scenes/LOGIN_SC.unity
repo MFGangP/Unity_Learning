@@ -228,6 +228,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8128231279550479518, guid: 7ee15245dd4a18c47993a51f3cd0396c, type: 3}
   m_PrefabInstance: {fileID: 1904044360835270709}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &461074565 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7279724131680521789, guid: 7ee15245dd4a18c47993a51f3cd0396c, type: 3}
+  m_PrefabInstance: {fileID: 1904044360835270709}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &471619437
 GameObject:
   m_ObjectHideFlags: 0
@@ -739,6 +750,7 @@ GameObject:
   - component: {fileID: 751604606}
   - component: {fileID: 751604605}
   - component: {fileID: 751604604}
+  - component: {fileID: 751604607}
   m_Layer: 5
   m_Name: LOGINButton
   m_TagString: Untagged
@@ -810,7 +822,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 751604605}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 751604607}
+        m_TargetAssemblyTypeName: Btn_Login_MySQL, Assembly-CSharp
+        m_MethodName: OnLoginButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &751604605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -849,6 +873,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 751604602}
   m_CullTransparentMesh: 1
+--- !u!114 &751604607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751604602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa04efadd87145049949d0d93e68eb6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ipAddress: 127.0.0.1
+  db_port: 3306
+  db_id: root
+  db_pw: 12345
+  db_name: iot1team
+  pooling: 1
+  Btn_Login_ID_Text: {fileID: 461074565}
+  Btn_Login_PW_Text: {fileID: 987818770}
 --- !u!1 &795125754
 GameObject:
   m_ObjectHideFlags: 0
@@ -1055,6 +1099,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &987818770 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4354075091554533712, guid: afc784bc0ef24de45be834c4e48db33b, type: 3}
+  m_PrefabInstance: {fileID: 3372567091211103107}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1362967108
 GameObject:
   m_ObjectHideFlags: 0
@@ -1590,6 +1645,7 @@ GameObject:
   - component: {fileID: 1903267754}
   - component: {fileID: 1903267753}
   - component: {fileID: 1903267752}
+  - component: {fileID: 1903267755}
   m_Layer: 5
   m_Name: CREATEButton
   m_TagString: Untagged
@@ -1661,7 +1717,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1903267753}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1903267755}
+        m_TargetAssemblyTypeName: Login_EX, Assembly-CSharp
+        m_MethodName: OnLoginButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1903267753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1700,6 +1768,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1903267750}
   m_CullTransparentMesh: 1
+--- !u!114 &1903267755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1903267750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c65e4232c2f0c4d4088b6656bb98a058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usernameInput: {fileID: 461074565}
+  passwordInput: {fileID: 987818770}
 --- !u!224 &1971475146 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2624993155190350450, guid: afc784bc0ef24de45be834c4e48db33b, type: 3}
@@ -1712,6 +1794,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1533961087}
     m_Modifications:
+    - target: {fileID: 5148723716362766567, guid: 7ee15245dd4a18c47993a51f3cd0396c, type: 3}
+      propertyPath: m_Name
+      value: EMAIL_Text
+      objectReference: {fileID: 0}
     - target: {fileID: 6818745745177299164, guid: 7ee15245dd4a18c47993a51f3cd0396c, type: 3}
       propertyPath: m_text
       value: "\uC544\uC774\uB514"
@@ -1952,6 +2038,10 @@ PrefabInstance:
     - target: {fileID: 4354075091554533712, guid: afc784bc0ef24de45be834c4e48db33b, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8965983235227620017, guid: afc784bc0ef24de45be834c4e48db33b, type: 3}
+      propertyPath: m_Name
+      value: PW_Text
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: afc784bc0ef24de45be834c4e48db33b, type: 3}
