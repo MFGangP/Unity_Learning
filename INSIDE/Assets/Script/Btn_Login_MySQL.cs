@@ -66,7 +66,6 @@ public class Btn_Login_MySQL : MonoBehaviour
         {
             Debug.Log(e.Message);
         }
-
         try
         {
             // 데이터베이스에서 데이터를 가져올 SQL 쿼리를 작성
@@ -79,6 +78,7 @@ public class Btn_Login_MySQL : MonoBehaviour
             {
                 //Debug.Log($"rdr[0].ToString(): '{rdr[0]}'");
                 //Debug.Log($"Btn_Login_ID_Text.text: '{Btn_Login_ID_Text.text}'");
+
                 // 문자열 내 숨겨진 문자가 포함되어서 나오기 때문에 Replace 해줘야한다.
                 string Login_ID_Text = Btn_Login_ID_Text.text.Replace("​", "");
                 string Login_PW_Text = Btn_Login_PW_Text.text.Replace("​", "");

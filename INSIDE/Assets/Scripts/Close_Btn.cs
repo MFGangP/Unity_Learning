@@ -6,7 +6,7 @@ public class Close_Btn : MonoBehaviour
 {
     // ÆË¾÷Ã¢ º¯¼ö
     public GameObject Popup;
-    public GameObject Popup1;
+    public GameObject Popup1 = null;
 
     // Start is called before the first frame update
     void Start()
