@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BtnController : MonoBehaviour
+public class Btn_Page_Controller : MonoBehaviour
 {
     public GameObject Pnl_Hb_Menu; // Pnl_Hb_Menu 패널을 Inspector에서 연결해주세요.
     private bool isMenuVisible = false;

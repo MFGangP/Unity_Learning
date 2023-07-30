@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -18,13 +18,13 @@ using static System.Net.Mime.MediaTypeNames;
 
 public class Btn_Login_MySQL : MonoBehaviour
 {
-    // µ¥ÀÌÅÍº£ÀÌ½º ¿¬°á¿¡ ÇÊ¿äÇÑ Á¤º¸¸¦ ¼³Á¤ÇÕ´Ï´Ù.
-    public string ipAddress = "127.0.0.1";  // µ¥ÀÌÅÍº£ÀÌ½º ¼­¹ö IP ÁÖ¼Ò
-    public string db_port = "3306";        // µ¥ÀÌÅÍº£ÀÌ½º Æ÷Æ® ¹øÈ£
-    public string db_id = "root";          // µ¥ÀÌÅÍº£ÀÌ½º Á¢¼Ó ID
-    public string db_pw = "12345";         // µ¥ÀÌÅÍº£ÀÌ½º Á¢¼Ó ºñ¹Ğ¹øÈ£
-    public string db_name = "iot1team";    // »ç¿ëÇÒ µ¥ÀÌÅÍº£ÀÌ½º ÀÌ¸§
-    public bool pooling = true;           // µ¥ÀÌÅÍº£ÀÌ½º ¿¬°á Ç®¸µ ¿©ºÎ
+    // ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²°ì— í•„ìš”í•œ ì •ë³´ë¥¼ ì„¤ì •í•©ë‹ˆë‹¤.
+    public string ipAddress = "127.0.0.1";  // ë°ì´í„°ë² ì´ìŠ¤ ì„œë²„ IP ì£¼ì†Œ
+    public string db_port = "3306";        // ë°ì´í„°ë² ì´ìŠ¤ í¬íŠ¸ ë²ˆí˜¸
+    public string db_id = "root";          // ë°ì´í„°ë² ì´ìŠ¤ ì ‘ì† ID
+    public string db_pw = "12345";         // ë°ì´í„°ë² ì´ìŠ¤ ì ‘ì† ë¹„ë°€ë²ˆí˜¸
+    public string db_name = "iot1team";    // ì‚¬ìš©í•  ë°ì´í„°ë² ì´ìŠ¤ ì´ë¦„
+    public bool pooling = true;           // ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²° í’€ë§ ì—¬ë¶€
 
     private string conn_string;
     private MySqlConnection con = null;
@@ -34,13 +34,13 @@ public class Btn_Login_MySQL : MonoBehaviour
     public TMP_Text Btn_Login_PW_Text;
     private void Start()
     {
-        // µ¥ÀÌÅÍº£ÀÌ½º ¿¬°á ¹®ÀÚ¿­À» ¼³Á¤
+        // ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²° ë¬¸ìì—´ì„ ì„¤ì •
         conn_string = "Server=" + ipAddress + ";Port=" + db_port + ";Database=" + db_name + ";User=" + db_id + ";Password=" + db_pw;
     }
 
     private void OnApplicationQuit()
     {
-        // ¾ÖÇÃ¸®ÄÉÀÌ¼ÇÀÌ Á¾·áµÉ ¶§ µ¥ÀÌÅÍº£ÀÌ½º ¿¬°áÀ» ´İ½À´Ï´Ù.
+        // ì• í”Œë¦¬ì¼€ì´ì…˜ì´ ì¢…ë£Œë  ë•Œ ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²°ì„ ë‹«ìŠµë‹ˆë‹¤.
         if (con != null)
         {
             if (con.State != ConnectionState.Closed)
@@ -52,12 +52,12 @@ public class Btn_Login_MySQL : MonoBehaviour
         }
     }
 
-    // ÀÌ ¸Ş¼­µå´Â LOGINButtonÀÌ Å¬¸¯µÉ ¶§ È£Ãâ
+    // ì´ ë©”ì„œë“œëŠ” LOGINButtonì´ í´ë¦­ë  ë•Œ í˜¸ì¶œ
     public void OnLoginButtonClick()
     {
         try
         {
-            // µ¥ÀÌÅÍº£ÀÌ½º ¿¬°áÀ» ½Ãµµ
+            // ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²°ì„ ì‹œë„
             con = new MySqlConnection(conn_string);
             con.Open();
             Debug.Log("Mysql state: " + con.State);
@@ -69,33 +69,50 @@ public class Btn_Login_MySQL : MonoBehaviour
 
         try
         {
-            // µ¥ÀÌÅÍº£ÀÌ½º¿¡¼­ µ¥ÀÌÅÍ¸¦ °¡Á®¿Ã SQL Äõ¸®¸¦ ÀÛ¼º
+            // ë°ì´í„°ë² ì´ìŠ¤ì—ì„œ ë°ì´í„°ë¥¼ ê°€ì ¸ì˜¬ SQL ì¿¼ë¦¬ë¥¼ ì‘ì„±
             string sql = string.Format("SELECT id, password, admin FROM account_parking WHERE id = '{0}' AND password = '{1}' AND admin = '0';", Btn_Login_ID_Text.text, Btn_Login_PW_Text.text);
             cmd = new MySqlCommand(sql, con);
             rdr = cmd.ExecuteReader();
 
-            // Äõ¸® °á°ú¸¦ ÀĞ¾î¿Í¼­ Unity ÄÜ¼Ö¿¡ ·Î±×·Î Ãâ·Â
+            // ì¿¼ë¦¬ ê²°ê³¼ë¥¼ ì½ì–´ì™€ì„œ Unity ì½˜ì†”ì— ë¡œê·¸ë¡œ ì¶œë ¥
             while (rdr.Read() == true)
             {
-                Debug.Log($"rdr[0].ToString(): '{rdr[0].ToString()}'");
-                Debug.Log($"Btn_Login_ID_Text.text: '{Btn_Login_ID_Text.text}'");
+                //Debug.Log($"rdr[0].ToString(): '{rdr[0]}'");
+                //Debug.Log($"Btn_Login_ID_Text.text: '{Btn_Login_ID_Text.text}'");
+                // ë¬¸ìì—´ ë‚´ ìˆ¨ê²¨ì§„ ë¬¸ìê°€ í¬í•¨ë˜ì–´ì„œ ë‚˜ì˜¤ê¸° ë•Œë¬¸ì— Replace í•´ì¤˜ì•¼í•œë‹¤.
+                string Login_ID_Text = Btn_Login_ID_Text.text.Replace("â€‹", "");
+                string Login_PW_Text = Btn_Login_PW_Text.text.Replace("â€‹", "");
 
-                if (rdr[0].ToString() == Btn_Login_ID_Text.text && 
-                    rdr[1].ToString() == Btn_Login_PW_Text.text &&
+                //Debug.Log($"Login_ID_Text: '{Login_ID_Text}'");
+                //Debug.Log($"rdr[0]: '{rdr[0].ToString()}'");
+                //Debug.Log($"Login_ID_Text.Length: {Login_ID_Text.Length}");
+                //Debug.Log($"rdr[0].Length: {rdr[0].ToString().Length}");
+                //foreach (char c in Login_ID_Text)
+                //{
+                //    Debug.Log($"Login_ID_Text char: '{Login_ID_Text}'");
+                //}
+                //foreach (char c in rdr[0].ToString())
+                //{
+                //    Debug.Log($"rdr[0] char: '{rdr[0]}'");
+                //}
+
+                if (rdr[0].ToString() == Login_ID_Text &&
+                    rdr[1].ToString() == Login_PW_Text &&
                     rdr[2].ToString() == "0")
                 {
-                    // ·Î±×ÀÎ ¼º°ø ½Ã Ã³¸®
+                    // ë¡œê·¸ì¸ ì„±ê³µ ì‹œ ì²˜ë¦¬
                     SceneManager.LoadScene("UI_SC");
                     SceneManager.LoadScene("INSIDE_SC", LoadSceneMode.Additive);
                     SceneManager.UnloadSceneAsync("LOGIN_SC");
-                    break; // ·Î±×ÀÎ ¼º°øÇßÀ¸¹Ç·Î ´õ ÀÌ»ó È®ÀÎÇÒ ÇÊ¿ä°¡ ¾øÀ¸¹Ç·Î ¹İº¹¹®À» Á¾·áÇÕ´Ï´Ù.
+                    break; // ë¡œê·¸ì¸ ì„±ê³µí–ˆìœ¼ë¯€ë¡œ ë” ì´ìƒ í™•ì¸í•  í•„ìš”ê°€ ì—†ìœ¼ë¯€ë¡œ ë°˜ë³µë¬¸ì„ ì¢…ë£Œ
                 }
+                continue;
             }
             if (rdr.Read() == false)
             {
-                // ·Î±×ÀÎ ½ÇÆĞ ½Ã Ã³¸®
-                Debug.Log("¾ÆÀÌµğ" + rdr[0] + "ºñ¹Ğ¹øÈ£" + rdr[1]);
-                Debug.Log("¾ÆÀÌµğ¿Í ºñ¹Ğ¹øÈ£¸¦ È®ÀÎÇØÁÖ¼¼¿ä.");
+                // ë¡œê·¸ì¸ ì‹¤íŒ¨ ì‹œ ì²˜ë¦¬
+                Debug.Log("ì•„ì´ë””" + rdr[0] + "ë¹„ë°€ë²ˆí˜¸" + rdr[1]);
+                Debug.Log("ì•„ì´ë””ì™€ ë¹„ë°€ë²ˆí˜¸ë¥¼ í™•ì¸í•´ì£¼ì„¸ìš”.");
             }
             rdr.Close();
         }
