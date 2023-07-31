@@ -19,11 +19,11 @@ using static System.Net.Mime.MediaTypeNames;
 public class Btn_Login_MySQL : MonoBehaviour
 {
     // 데이터베이스 연결에 필요한 정보를 설정합니다.
-    public string ipAddress = "127.0.0.1";  // 데이터베이스 서버 IP 주소
-    public string db_port = "3306";        // 데이터베이스 포트 번호
-    public string db_id = "root";          // 데이터베이스 접속 ID
-    public string db_pw = "12345";         // 데이터베이스 접속 비밀번호
-    public string db_name = "iot1team";    // 사용할 데이터베이스 이름
+    public string db_Address = "210.119.12.100";  // 데이터베이스 서버 IP 주소
+    public string db_Port = "10000";        // 데이터베이스 포트 번호
+    public string db_Id = "pi";          // 데이터베이스 접속 ID
+    public string db_Pw = "12345";         // 데이터베이스 접속 비밀번호
+    public string db_Name = "team1_iot";    // 사용할 데이터베이스 이름
     public bool pooling = true;           // 데이터베이스 연결 풀링 여부
 
     private string conn_string;
@@ -35,7 +35,7 @@ public class Btn_Login_MySQL : MonoBehaviour
     private void Start()
     {
         // 데이터베이스 연결 문자열을 설정
-        conn_string = "Server=" + ipAddress + ";Port=" + db_port + ";Database=" + db_name + ";User=" + db_id + ";Password=" + db_pw;
+        conn_string = "Server=" + db_Address + ";Port=" + db_Port + ";Database=" + db_Name + ";User=" + db_Id + ";Password=" + db_Pw;
     }
 
     private void OnApplicationQuit()
@@ -73,46 +73,51 @@ public class Btn_Login_MySQL : MonoBehaviour
             cmd = new MySqlCommand(sql, con);
             rdr = cmd.ExecuteReader();
 
-            // 쿼리 결과를 읽어와서 Unity 콘솔에 로그로 출력
-            while (rdr.Read() == true)
-            {
-                //Debug.Log($"rdr[0].ToString(): '{rdr[0]}'");
-                //Debug.Log($"Btn_Login_ID_Text.text: '{Btn_Login_ID_Text.text}'");
-
-                // 문자열 내 숨겨진 문자가 포함되어서 나오기 때문에 Replace 해줘야한다.
-                string Login_ID_Text = Btn_Login_ID_Text.text.Replace("​", "");
-                string Login_PW_Text = Btn_Login_PW_Text.text.Replace("​", "");
-
-                //Debug.Log($"Login_ID_Text: '{Login_ID_Text}'");
-                //Debug.Log($"rdr[0]: '{rdr[0].ToString()}'");
-                //Debug.Log($"Login_ID_Text.Length: {Login_ID_Text.Length}");
-                //Debug.Log($"rdr[0].Length: {rdr[0].ToString().Length}");
-                //foreach (char c in Login_ID_Text)
-                //{
-                //    Debug.Log($"Login_ID_Text char: '{Login_ID_Text}'");
-                //}
-                //foreach (char c in rdr[0].ToString())
-                //{
-                //    Debug.Log($"rdr[0] char: '{rdr[0]}'");
-                //}
-
-                if (rdr[0].ToString() == Login_ID_Text &&
-                    rdr[1].ToString() == Login_PW_Text &&
-                    rdr[2].ToString() == "0")
-                {
-                    // 로그인 성공 시 처리
-                    SceneManager.LoadScene("UI_SC");
-                    SceneManager.LoadScene("INSIDE_SC", LoadSceneMode.Additive);
-                    SceneManager.UnloadSceneAsync("LOGIN_SC");
-                    break; // 로그인 성공했으므로 더 이상 확인할 필요가 없으므로 반복문을 종료
-                }
-                continue;
-            }
-            if (rdr.Read() == false)
+            if (rdr.HasRows == false)
             {
                 // 로그인 실패 시 처리
                 Debug.Log("아이디" + rdr[0] + "비밀번호" + rdr[1]);
                 Debug.Log("아이디와 비밀번호를 확인해주세요.");
+            }
+
+            if (rdr.HasRows)
+            { 
+                // 쿼리 결과를 읽어와서 Unity 콘솔에 로그로 출력
+                // READ하면 다음 행으로 넘어가버리기 때문에 값이 있는지 없는지 체크하는게 가장 좋은 방법
+                while (rdr.Read() == true)
+                {
+                    //Debug.Log($"rdr[0].ToString(): '{rdr[0]}'");
+                    //Debug.Log($"Btn_Login_ID_Text.text: '{Btn_Login_ID_Text.text}'");
+
+                    // 문자열 내 숨겨진 문자가 포함되어서 나오기 때문에 Replace 해줘야한다.
+                    string Login_ID_Text = Btn_Login_ID_Text.text.Replace("​", "");
+                    string Login_PW_Text = Btn_Login_PW_Text.text.Replace("​", "");
+
+                    //Debug.Log($"Login_ID_Text: '{Login_ID_Text}'");
+                    //Debug.Log($"rdr[0]: '{rdr[0].ToString()}'");
+                    //Debug.Log($"Login_ID_Text.Length: {Login_ID_Text.Length}");
+                    //Debug.Log($"rdr[0].Length: {rdr[0].ToString().Length}");
+                    //foreach (char c in Login_ID_Text)
+                    //{
+                    //    Debug.Log($"Login_ID_Text char: '{Login_ID_Text}'");
+                    //}
+                    //foreach (char c in rdr[0].ToString())
+                    //{
+                    //    Debug.Log($"rdr[0] char: '{rdr[0]}'");
+                    //}
+
+                    if (rdr[0].ToString() == Login_ID_Text &&
+                        rdr[1].ToString() == Login_PW_Text &&
+                        rdr[2].ToString() == "0")
+                    {
+                        // 로그인 성공 시 처리
+                        SceneManager.LoadScene("UI_SC");
+                        SceneManager.LoadScene("INSIDE_SC", LoadSceneMode.Additive);
+                        SceneManager.UnloadSceneAsync("LOGIN_SC");
+                        break; // 로그인 성공했으므로 더 이상 확인할 필요가 없으므로 반복문을 종료
+                    }
+                    continue;
+                }
             }
             rdr.Close();
         }
