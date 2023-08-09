@@ -46,9 +46,9 @@ public class UltrasrtfcstData
 public class API_Data : MonoBehaviour
 {
     // 데이터를 저장할 객체들
-    public RiverFlowData riverFlowData = new RiverFlowData();
-    public PredictData predictData = new PredictData();
-    public UltrasrtfcstData ultrasrtfcstData = new UltrasrtfcstData();
+    public static RiverFlowData riverFlowData = new RiverFlowData();
+    public static PredictData predictData = new PredictData();
+    public static UltrasrtfcstData ultrasrtfcstData = new UltrasrtfcstData();
 
     private string db_Address = "localhost"; // "210.119.12.112";
     private string db_Port = "3306"; // "10000";
@@ -170,4 +170,6 @@ public class API_Data : MonoBehaviour
             Debug.Log(e.Message);
         }
     }
+
+
 }
