@@ -5,7 +5,7 @@ public class EventManager : MonoBehaviour
 {
     public string pinMapName;
     public string cctvURL;
-   public static EventManager Instance { get; private set; }
+    public static EventManager Instance { get; private set; }
 
     //// 패널 생성 요청 이벤트를 정의
     public event Action<MapPinInfo> OnPanelCreationRequested;

@@ -1,25 +1,67 @@
-Ôªøusing System;
+using System;
 using System.Data;
 using UnityEngine;
 using MySql.Data.MySqlClient;
-using System.Runtime.CompilerServices;
 using System.Collections.Generic;
+
+// ºˆ¿ß API ¡§∫∏∏¶ ¥„¥¬ ≈¨∑°Ω∫
+public class RiverFlowData
+{
+    public string siteName;
+    public string waterLevel;
+    public string obsrTime;
+    public string alertLevel1;
+    public string alertLevel2;
+    public string alertLevel3;
+    public string alertLevel4;
+    public string sttus;
+}
+
+// øπ√¯, «ˆ¿Á ≥Øææ µ•¿Ã≈Õ∏¶ ¥„¥¬ ≈¨∑°Ω∫
+public class PredictData
+{
+    public string predict;
+    public string basedate;
+    public string basetime;
+    public string temp;
+    public string deg;
+    public string rain;
+    public string windspeed;
+}
+// øπ∫∏ µ•¿Ã≈Õ∏¶ ¥„¥¬ ≈¨∑°Ω∫
+public class UltrasrtfcstData
+{
+    public string FcstDate;
+    public string FcstTime;
+    public string T1H;
+    public string RN1;
+    public string SKY;
+    public string REH;
+    public string PTY;
+    public string VEC;
+    public string WSD;
+}
+
 
 public class API_Data : MonoBehaviour
 {
-    private string db_Address = "210.119.12.112";
-    private string db_Port = "10000";
-    private string db_Id = "pi";
+    // µ•¿Ã≈Õ∏¶ ¿˙¿Â«“ ∞¥√ºµÈ
+    public RiverFlowData riverFlowData = new RiverFlowData();
+    public PredictData predictData = new PredictData();
+    public UltrasrtfcstData ultrasrtfcstData = new UltrasrtfcstData();
+
+    private string db_Address = "localhost"; // "210.119.12.112";
+    private string db_Port = "3306"; // "10000";
+    private string db_Id = "root"; // "pi";
     private string db_Pw = "12345";
     private string db_Name = "team1_iot";
     private string conn_string;
-    
+
     private void Start()
     {
         conn_string = "Server=" + db_Address + ";Port=" + db_Port + ";Database=" + db_Name + ";User=" + db_Id + ";Password=" + db_Pw;
-
-        // ÏµúÏ¥àÏóê 0Ï¥à ÌõÑÏóê 30Î∂ÑÎßàÎã§ UpdateRiverFlow Ìï®ÏàòÎ•º Ìò∏Ï∂úÌïòÎèÑÎ°ù ÏÑ§Ï†ï
-        InvokeRepeating("UpdateRiverFlow", 0f, 1800f);
+        // √÷√  Ω««‡ »ƒ 5∫–∏∂¥Ÿ UpdateRiverFlow «‘ºˆ∏¶ »£√‚
+        InvokeRepeating("UpdateRiverFlow", 0f, 300f);
     }
 
     private void UpdateRiverFlow()
@@ -34,13 +76,11 @@ public class API_Data : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("DB Ïó∞Í≤∞ Ïò§Î•ò!");
+                    Debug.Log("DB ø¨∞· ø¿∑˘!");
                 }
 
-                Debug.Log("Mysql state: " + conn.State);
-
-                string River_sql = "SELECT siteName, waterLevel, obsrTime, alertLevel1, alertLevel2, alertLevel3, alertLevel4, sttus FROM team1_iot.riverflow WHERE siteName =\"Ïó∞ÏïàÍµê\" ORDER BY idx DESC LIMIT 1;";
-
+                // π∞¿« »Â∏ß ¡§∫∏ ∞°¡Æø¿±‚
+                string River_sql = "SELECT siteName, waterLevel, obsrTime, alertLevel1, alertLevel2, alertLevel3, alertLevel4, sttus FROM team1_iot.riverflow WHERE siteName =\"ø¨æ»±≥\" ORDER BY idx DESC LIMIT 1;";
                 MySqlCommand River_cmd = new MySqlCommand(River_sql, conn);
                 using (MySqlDataReader River_Reader = River_cmd.ExecuteReader())
                 {
@@ -48,23 +88,26 @@ public class API_Data : MonoBehaviour
                     {
                         while (River_Reader.Read())
                         {
-                            Debug.Log($"siteName: '{River_Reader[0]}'");
-                            Debug.Log($"waterLevel: '{River_Reader[1]}'");
-                            Debug.Log($"obsrTime: '{River_Reader[2]}'");
-                            Debug.Log($"alertLevel1: '{River_Reader[3]}'");
-                            Debug.Log($"alertLevel2: '{River_Reader[4]}'");
-                            Debug.Log($"alertLevel3: '{River_Reader[5]}'");
-                            Debug.Log($"alertLevel4: '{River_Reader[6]}'");
-                            Debug.Log($"sttus: '{River_Reader[7]}'");
+                            riverFlowData.siteName = River_Reader.GetString(0); // √¯¡§ ¡ˆø™
+                            riverFlowData.waterLevel = River_Reader.GetString(1); // «ˆ¿Á ºˆ¿ß
+                            riverFlowData.obsrTime = River_Reader.GetString(2); // √¯¡§ Ω√∞£
+                            riverFlowData.alertLevel1 = River_Reader.GetString(3); // µ–ƒ° ºˆ¿ß
+                            riverFlowData.alertLevel2 = River_Reader.GetString(4); // ¡÷¿« ºˆ¿ß
+                            riverFlowData.alertLevel3 = River_Reader.GetString(5); // ∞Ê∞Ë ºˆ¿ß
+                            riverFlowData.alertLevel4 = River_Reader.GetString(6); // ¿ß«Ë ºˆ¿ß
+                            riverFlowData.sttus = River_Reader.GetString(7); // µ•¿Ã≈Õ ªÛ≈¬
+
+                            // Debug.Log($"siteName: '{River_Reader.GetString(0)}' / waterLevel: '{River_Reader.GetString(1)}' / obsrTime: '{River_Reader.GetString(2)}' / alertLevel1: '{River_Reader.GetString(3)}' / alertLevel2: '{River_Reader.GetString(4)} / alertLevel2: '{River_Reader.GetString(4)}' / alertLevel3: '{River_Reader.GetString(5)}' / alertLevel4: '{River_Reader.GetString(6)}' / sttus: '{River_Reader.GetString(7)}'");
                         }
                     }
                     else
                     {
-                        Debug.Log("DB Ï∂úÎ†• Ïò§Î•ò!");
+                        Debug.Log("riverFlow DB √‚∑¬ ø¿∑˘!");
                     }
                 }
+
+                // ±‚ªÛ µ•¿Ã≈Õ ∞°¡Æø¿±‚
                 string Predict_sql = "SELECT predict, basedate, basetime, temp, deg, rain, windspeed FROM team1_iot.predict ORDER BY idx DESC LIMIT 1;";
-                List<int> Predict_Reader_List = new List<int>();
                 MySqlCommand Predict_cmd = new MySqlCommand(Predict_sql, conn);
                 using (MySqlDataReader Predict_Reader = Predict_cmd.ExecuteReader())
                 {
@@ -72,29 +115,24 @@ public class API_Data : MonoBehaviour
                     {
                         while (Predict_Reader.Read())
                         {
-                            // ÏòàÏ∏°Ïπò
-                            Debug.Log($"predict: '{Predict_Reader[0]}'");
-                            // Í∏∞Ï§Ä ÎÇ†Ïßú
-                            Debug.Log($"basedate: '{Predict_Reader[1]}'");
-                            // Í∏∞Ï§Ä ÏãúÍ∞Ñ
-                            Debug.Log($"basetime: '{Predict_Reader[2]}'");
-                            // Ïò®ÎèÑ
-                            Debug.Log($"temp: '{Predict_Reader[3]}'");
-                            // ÌíçÌñ•
-                            Debug.Log($"deg: '{Predict_Reader[4]}'");
-                            // Í∞ïÏàòÎüâ
-                            Debug.Log($"rain: '{Predict_Reader[5]}'");
-                            // ÌíçÏÜç
-                            Debug.Log($"windspeed: '{Predict_Reader[6]}'");
+                            predictData.predict = Predict_Reader.GetString(0); // øπ√¯ƒ°
+                            predictData.basedate = Predict_Reader.GetString(1); // ±‚¡ÿ ≥Ø¬•
+                            predictData.basetime = Predict_Reader.GetString(2); // ±‚¡ÿ Ω√∞£
+                            predictData.temp = Predict_Reader.GetString(3); // ø¬µµ
+                            predictData.deg = Predict_Reader.GetString(4); // «≥«‚
+                            predictData.rain = Predict_Reader.GetString(5); // ∞≠ºˆ∑Æ
+                            predictData.windspeed = Predict_Reader.GetString(6); // «≥º”
+
+                            // Debug.Log($"predict: '{Predict_Reader.GetString(0)}' / basedate: '{Predict_Reader.GetString(1)}' / basetime: '{Predict_Reader.GetString(2)}' / temp: '{Predict_Reader.GetString(3)}' / deg: '{Predict_Reader.GetString(4)}' / rain: '{Predict_Reader.GetString(5)}' / windspeed: '{Predict_Reader.GetString(6)}'");
                         }
                     }
                     else
                     {
-                        Debug.Log("DB Ï∂úÎ†• Ïò§Î•ò!");
+                        Debug.Log("predict DB √‚∑¬ ø¿∑˘!");
                     }
                 }
-                string ultrasrtfcst_sql = "SELECT FcstDate, FcstTime, T1H, RN1, SKY, REH, PTY, VEC, WSD FROM team1_iot.ultrasrtfcst ORDER BY idx ASC LIMIT 6;";
-
+                // øπ∫∏ µ•¿Ã≈Õ ∞°¡Æø¿±‚
+                string ultrasrtfcst_sql = $"SELECT FcstDate, FcstTime, T1H, RN1, SKY, REH, PTY, VEC, WSD FROM team1_iot.ultrasrtfcst ORDER BY idx ASC LIMIT 6;";
                 MySqlCommand ultrasrtfcst_cmd = new MySqlCommand(ultrasrtfcst_sql, conn);
                 using (MySqlDataReader ultrasrtfcst_Reader = ultrasrtfcst_cmd.ExecuteReader())
                 {
@@ -102,40 +140,30 @@ public class API_Data : MonoBehaviour
                     {
                         while (ultrasrtfcst_Reader.Read())
                         {
-                            for (int i = 0; i < 5; i++)
-                            {
-                                int columnIndex = i * 9;  // Í∞Å Î∞òÎ≥µÏóêÏÑú Ïó¥ Ïù∏Îç±Ïä§ Í≥ÑÏÇ∞
-                                // Í∏∞Ï§Ä ÎÇ†Ïßú
-                                Debug.Log($"FcstDate {i + 1}Î≤àÏß∏ Ïó¥: '{ultrasrtfcst_Reader[columnIndex]}'");
-                                // Í∏∞Ï§Ä ÏãúÍ∞Ñ
-                                Debug.Log($"FcstTime {i + 1}Î≤àÏß∏ Ïó¥: '{ultrasrtfcst_Reader[columnIndex + 1]}'");
-                                // Í∏∞Ïò®
-                                Debug.Log($"T1H {i + 1}Î≤àÏß∏ Ïó¥: '{ultrasrtfcst_Reader[columnIndex + 2]}'");
-                                // 1ÏãúÍ∞Ñ Í∞ïÏàòÎüâ
-                                Debug.Log($"RN1 {i + 1}Î≤àÏß∏ Ïó¥: '{ultrasrtfcst_Reader[columnIndex + 3]}'");
-                                // ÌïòÎäòÏÉÅÌÉú
-                                Debug.Log($"SKY {i + 1}Î≤àÏß∏ Ïó¥: '{ultrasrtfcst_Reader[columnIndex + 4]}'");
-                                // ÏäµÎèÑ
-                                Debug.Log($"REH {i + 1}Î≤àÏß∏ Ïó¥: '{ultrasrtfcst_Reader[columnIndex + 5]}'");
-                                // Í∞ïÏàòÌòïÌÉú
-                                Debug.Log($"PTY {i + 1}Î≤àÏß∏ Ïó¥: '{ultrasrtfcst_Reader[columnIndex + 6]}'");
-                                // ÌíçÌñ•
-                                Debug.Log($"VEC {i + 1}Î≤àÏß∏ Ïó¥: '{ultrasrtfcst_Reader[columnIndex + 7]}'");
-                                // ÌíçÏÜç
-                                Debug.Log($"WSD {i + 1}Î≤àÏß∏ Ïó¥: '{ultrasrtfcst_Reader[columnIndex + 8]}'");
-                            }
-                            break;
+                            ultrasrtfcstData.FcstDate = ultrasrtfcst_Reader.GetString(0); // ±‚¡ÿ ≥Ø¬•
+                            ultrasrtfcstData.FcstTime = ultrasrtfcst_Reader.GetString(1); // ±‚¡ÿ Ω√∞£
+                            ultrasrtfcstData.T1H = ultrasrtfcst_Reader.GetString(2); // ±‚ø¬
+                            ultrasrtfcstData.RN1 = ultrasrtfcst_Reader.GetString(3); // 1Ω√∞£ ∞≠ºˆ∑Æ
+                            ultrasrtfcstData.SKY = ultrasrtfcst_Reader.GetString(4); // «œ¥√ªÛ≈¬
+                            ultrasrtfcstData.REH = ultrasrtfcst_Reader.GetString(5); // Ω¿µµ
+                            ultrasrtfcstData.PTY = ultrasrtfcst_Reader.GetString(6); // ∞≠ºˆ«¸≈¬
+                            ultrasrtfcstData.VEC = ultrasrtfcst_Reader.GetString(7); // «≥«‚
+                            ultrasrtfcstData.WSD = ultrasrtfcst_Reader.GetString(8); // «≥º”
+
+                            // Debug.Log($"FcstDate : '{ultrasrtfcstData.FcstDate}' / FcstTime ø≠: '{ultrasrtfcstData.FcstTime}' / T1H : '{ultrasrtfcstData.T1H}' / RN1 : '{ultrasrtfcstData.RN1}' / SKY : '{ultrasrtfcstData.SKY}' / REH : '{ultrasrtfcstData.REH}' / PTY : '{ultrasrtfcstData.PTY}' / VEC : '{ultrasrtfcstData.VEC}' / WSD : '{ultrasrtfcstData.WSD}'");
                         }
                     }
                     else
                     {
-                        Debug.Log("DB Ï∂úÎ†• Ïò§Î•ò!");
+                        Debug.Log("ultrasrtfcst DB √‚∑¬ ø¿∑˘!");
                     }
                 }
+
+                // ¥Ÿ∏• µ•¿Ã≈ÕµÈ¿ª ∞°¡Æø¿¥¬ ∫Œ∫–µµ ¿ØªÁ«œ∞‘ ¿€º∫
+
                 conn.Close();
-            Debug.Log("DB Ïó∞Í≤∞ Ìï¥Ï†ú!");
+                Debug.Log("DB ø¨∞· «ÿ¡¶!");
             }
-            
         }
         catch (Exception e)
         {
