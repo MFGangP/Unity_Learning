@@ -58,7 +58,7 @@ public class Rain_Controller : MonoBehaviour
             PSys_Rain.gameObject.SetActive(false);
             PSys_Rain1.gameObject.SetActive(false);
         }
-        else
+        else // 강수량이 0이 아니면 파티클 활성화
         {
             PSys_Rain.gameObject.SetActive(true);
             PSys_Rain1.gameObject.SetActive(true);
