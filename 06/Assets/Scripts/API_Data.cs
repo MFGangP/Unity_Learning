@@ -74,7 +74,7 @@ public class API_Data : MonoBehaviour
     {
         conn_string = "Server=" + db_Address + ";Port=" + db_Port + ";Database=" + db_Name + ";User=" + db_Id + ";Password=" + db_Pw;
         // 최초 실행 후 5분마다 UpdateRiverFlow 함수를 호출
-        InvokeRepeating("UpdateRiverFlow", 0f, 300f);
+        InvokeRepeating("UpdateRiverFlow", 0f, 30.0f);
     }
 
     private void UpdateRiverFlow()

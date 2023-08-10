@@ -14,7 +14,7 @@ public class Rain_Controller : MonoBehaviour
 
     private float minSimulationSpeed = 0.5f; // 최소 시뮬레이션 속력
     private float maxSimulationSpeed = 2.0f; // 최대 시뮬레이션 속력
-    private float updateInterval = 60.0f; // 업데이트 주기 (1분)
+    private float updateInterval = 30.1f; // 업데이트 주기 (1분)
     private float DB_PredictData_Rain;
 
     private void Start()
