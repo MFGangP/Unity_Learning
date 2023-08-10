@@ -5668,8 +5668,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d89cf774bbd6b9941aae4e91da164a68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rain: {fileID: 261603393}
-  Rain1: {fileID: 1651831574}
+  Rain: Rain
+  Rain1: Rain1
 --- !u!1001 &1402284201
 PrefabInstance:
   m_ObjectHideFlags: 0

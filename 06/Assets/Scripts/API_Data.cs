@@ -79,7 +79,7 @@ public class API_Data : MonoBehaviour
                     Debug.Log("DB 연결 오류!");
                 }
 
-                // 물의 흐름 정보 가져오기
+                // 강의 흐름 정보 가져오기
                 string River_sql = "SELECT siteName, waterLevel, obsrTime, alertLevel1, alertLevel2, alertLevel3, alertLevel4, sttus FROM team1_iot.riverflow WHERE siteName =\"연안교\" ORDER BY idx DESC LIMIT 1;";
                 MySqlCommand River_cmd = new MySqlCommand(River_sql, conn);
                 using (MySqlDataReader River_Reader = River_cmd.ExecuteReader())
@@ -105,7 +105,6 @@ public class API_Data : MonoBehaviour
                         Debug.Log("riverFlow DB 출력 오류!");
                     }
                 }
-
                 // 기상 데이터 가져오기
                 string Predict_sql = "SELECT predict, basedate, basetime, temp, deg, rain, windspeed FROM team1_iot.predict ORDER BY idx DESC LIMIT 1;";
                 MySqlCommand Predict_cmd = new MySqlCommand(Predict_sql, conn);
@@ -158,9 +157,6 @@ public class API_Data : MonoBehaviour
                         Debug.Log("ultrasrtfcst DB 출력 오류!");
                     }
                 }
-
-                // 다른 데이터들을 가져오는 부분도 유사하게 작성
-
                 conn.Close();
                 Debug.Log("DB 연결 해제!");
             }
