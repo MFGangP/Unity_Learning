@@ -2,15 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IS_WL_Controller : MonoBehaviour
+public class OS_WL_Controller : MonoBehaviour
 {
-    private string Inside_Water_Level_1 = "Inside_Water_Level_1"; // 찾을 수위 오브젝트 이름
-    private string Inside_Water_Level_2 = "Inside_Water_Level_2"; // 찾을 수위 오브젝트 이름
-    private string Inside_Water_Level_3 = "Inside_Water_Level_3"; // 찾을 수위 오브젝트 이름
+    private string Outside_Water_Level = "Outside_Water_Level"; // 찾을 수위 오브젝트 이름
 
-    private GameObject Water_Level_1; // 수위 오브젝트 참조 변수
-    private GameObject Water_Level_2; // 수위 오브젝트 참조 변수
-    private GameObject Water_Level_3; // 수위 오브젝트 참조 변수
+    private GameObject Water_Level; // 수위 오브젝트 참조 변수
 
     private float updateInterval = 30.1f; // 업데이트 주기 (30초)
 
@@ -22,19 +18,14 @@ public class IS_WL_Controller : MonoBehaviour
     void Start()
     {
         // "Inside_Water_Level_1" 이름의 오브젝트를 찾아서 변수에 대입
-        Water_Level_1 = GameObject.Find(Inside_Water_Level_1);
-        // "Inside_Water_Level_2" 이름의 오브젝트를 찾아서 변수에 대입
-        Water_Level_2 = GameObject.Find(Inside_Water_Level_2);
-        // "Inside_Water_Level_3" 이름의 오브젝트를 찾아서 변수에 대입
-        Water_Level_3 = GameObject.Find(Inside_Water_Level_3);
-
+        Water_Level = GameObject.Find(Outside_Water_Level);
         // 모든 수위 오브젝트가 찾아졌는지 확인
-        if (Water_Level_1 != null && Water_Level_2 != null && Water_Level_3 != null)
+        if (Water_Level != null)
         {
             Debug.Log("오브젝트 찾기 완료");
 
             // 주기적으로 센서 값을 읽어오는 함수를 호출
-            // 1분 Read_IS_WL 함수 실행
+            // 1분 ReadAndAdjustWaterLevels 함수 실행
             InvokeRepeating("Read_IS_WL", 0.1f, updateInterval);
         }
     }
@@ -56,7 +47,7 @@ public class IS_WL_Controller : MonoBehaviour
             Water_Level_3.transform.position = new Vector3(1925.42f, 279.62f, 1017.71f);
         }
         // 수위 40 이상이면 더이상 표현 할 필요가 없음 최대값인 285.0f로 고정
-        else if (DB_SensorData_Water_Level > 40) 
+        else if (DB_SensorData_Water_Level > 40)
         {
             // 새로운 위치 값을 적용하여 수위 오브젝트의 위치 조정
             Water_Level_1.transform.position = new Vector3(2108.73f, 285.0f, 1290.99f);

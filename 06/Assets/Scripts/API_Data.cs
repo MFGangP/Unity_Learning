@@ -70,11 +70,13 @@ public class API_Data : MonoBehaviour
     private string db_Name = "team1_iot";
     private string conn_string;
 
+    private float updateInterval = 30.1f; // 업데이트 주기 (30초)
+
     private void Start()
     {
         conn_string = "Server=" + db_Address + ";Port=" + db_Port + ";Database=" + db_Name + ";User=" + db_Id + ";Password=" + db_Pw;
-        // 최초 실행 후 5분마다 UpdateRiverFlow 함수를 호출
-        InvokeRepeating("UpdateRiverFlow", 0f, 30.0f);
+        // 최초 실행 후 30초 마다 UpdateRiverFlow 함수를 호출
+        InvokeRepeating("UpdateRiverFlow", 0f, updateInterval);
     }
 
     private void UpdateRiverFlow()
