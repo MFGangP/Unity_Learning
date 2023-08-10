@@ -5668,8 +5668,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d89cf774bbd6b9941aae4e91da164a68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rain: Rain
-  Rain1: Rain1
 --- !u!1001 &1402284201
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11028,3 +11026,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a2f4af47d289a72438e5ababf72eaba9, type: 3}
   m_PrefabInstance: {fileID: 59096908}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2137519925 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a2f4af47d289a72438e5ababf72eaba9, type: 3}
+  m_PrefabInstance: {fileID: 59096908}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2137519926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137519925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15f2ac586b7658c4c9c625606a5e2409, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

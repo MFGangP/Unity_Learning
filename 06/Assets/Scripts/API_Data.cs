@@ -41,7 +41,19 @@ public class UltrasrtfcstData
     public string VEC;
     public string WSD;
 }
-
+// 센서 데이터를 담는 클래스
+public class SensorData
+{
+    public string AD1_RCV_Parking_Status;
+    public string AD1_RCV_IR_Sensor;
+    public string AD1_RCV_Temperature;
+    public string AD1_RCV_Humidity;
+    public string AD1_RCV_Dust;
+    public string AD2_RCV_CGuard;
+    public string AD3_RCV_WGuard_WAVE;
+    public string AD4_RCV_NFC;
+    public string AD4_RCV_WL_CNNT;
+}
 
 public class API_Data : MonoBehaviour
 {
@@ -49,6 +61,7 @@ public class API_Data : MonoBehaviour
     public static RiverFlowData riverFlowData = new RiverFlowData();
     public static PredictData predictData = new PredictData();
     public static UltrasrtfcstData ultrasrtfcstData = new UltrasrtfcstData();
+    public static SensorData sensorData = new SensorData();
 
     private string db_Address = "localhost"; // "210.119.12.112";
     private string db_Port = "3306"; // "10000";
@@ -80,7 +93,7 @@ public class API_Data : MonoBehaviour
                 }
 
                 // 강의 흐름 정보 가져오기
-                string River_sql = "SELECT siteName, waterLevel, obsrTime, alertLevel1, alertLevel2, alertLevel3, alertLevel4, sttus FROM team1_iot.riverflow WHERE siteName =\"연안교\" ORDER BY idx DESC LIMIT 1;";
+                string River_sql = "SELECT siteName, waterLevel, obsrTime, alertLevel1, alertLevel2, alertLevel3, alertLevel4, sttus FROM team1_iot.riverflow WHERE siteName =\"연안교\" ORDER BY idx DESC LIMIT 1";
                 MySqlCommand River_cmd = new MySqlCommand(River_sql, conn);
                 using (MySqlDataReader River_Reader = River_cmd.ExecuteReader())
                 {
@@ -106,7 +119,7 @@ public class API_Data : MonoBehaviour
                     }
                 }
                 // 기상 데이터 가져오기
-                string Predict_sql = "SELECT predict, basedate, basetime, temp, deg, rain, windspeed FROM team1_iot.predict ORDER BY idx DESC LIMIT 1;";
+                string Predict_sql = "SELECT predict, basedate, basetime, temp, deg, rain, windspeed FROM team1_iot.predict ORDER BY idx DESC LIMIT 1";
                 MySqlCommand Predict_cmd = new MySqlCommand(Predict_sql, conn);
                 using (MySqlDataReader Predict_Reader = Predict_cmd.ExecuteReader())
                 {
@@ -131,7 +144,7 @@ public class API_Data : MonoBehaviour
                     }
                 }
                 // 예보 데이터 가져오기
-                string ultrasrtfcst_sql = $"SELECT FcstDate, FcstTime, T1H, RN1, SKY, REH, PTY, VEC, WSD FROM team1_iot.ultrasrtfcst ORDER BY idx ASC LIMIT 6;";
+                string ultrasrtfcst_sql = $"SELECT FcstDate, FcstTime, T1H, RN1, SKY, REH, PTY, VEC, WSD FROM team1_iot.ultrasrtfcst ORDER BY idx ASC LIMIT 6";
                 MySqlCommand ultrasrtfcst_cmd = new MySqlCommand(ultrasrtfcst_sql, conn);
                 using (MySqlDataReader ultrasrtfcst_Reader = ultrasrtfcst_cmd.ExecuteReader())
                 {
@@ -155,6 +168,31 @@ public class API_Data : MonoBehaviour
                     else
                     {
                         Debug.Log("ultrasrtfcst DB 출력 오류!");
+                    }
+                }
+                // 예보 데이터 가져오기
+                string sensorData_sql = $"SELECT id_x, AD1_RCV_Parking_Status, AD1_RCV_IR_Sensor, AD1_RCV_Temperature, AD1_RCV_Humidity, AD1_RCV_Dust, AD2_RCV_CGuard, AD3_RCV_WGuard_WAVE, AD4_RCV_NFC, AD4_RCV_WL_CNNT FROM team1_iot.sensor_db";
+                MySqlCommand sensorData_cmd = new MySqlCommand(sensorData_sql, conn);
+                using (MySqlDataReader sensorData_Reader = sensorData_cmd.ExecuteReader())
+                {
+                    if (sensorData_Reader.HasRows)
+                    {
+                        while (sensorData_Reader.Read())
+                        {
+                            sensorData.AD1_RCV_Parking_Status = sensorData_Reader.GetString(1); // AD1_LED
+                            sensorData.AD1_RCV_IR_Sensor = sensorData_Reader.GetString(2); // AD1_IR 센서
+                            sensorData.AD1_RCV_Temperature = sensorData_Reader.GetString(3); // AD1_온도
+                            sensorData.AD1_RCV_Humidity = sensorData_Reader.GetString(4); // AD1_습도
+                            sensorData.AD1_RCV_Dust = sensorData_Reader.GetString(5); // AD1_미세먼지
+                            sensorData.AD2_RCV_CGuard = sensorData_Reader.GetString(6); // AD2_서보모터 출입구_차단기
+                            sensorData.AD3_RCV_WGuard_WAVE = sensorData_Reader.GetString(7); // AD3_차수막
+                            sensorData.AD4_RCV_NFC = sensorData_Reader.GetString(8); // AD4_NFC
+                            sensorData.AD4_RCV_WL_CNNT = sensorData_Reader.GetString(9); // 풍속
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("sensorData DB 출력 오류!");
                     }
                 }
                 conn.Close();
