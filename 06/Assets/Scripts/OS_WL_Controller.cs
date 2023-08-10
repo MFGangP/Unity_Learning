@@ -10,11 +10,11 @@ public class OS_WL_Controller : MonoBehaviour
 
     private float updateInterval = 30.1f; // 업데이트 주기 (30초)
 
-    private float DB_SensorData_Water_Level; // 센서로부터 읽은 수위 데이터
+    private float DB_RiverFlowData_Water_Level; // API DB로부터 읽은 수위 데이터
 
     // 프로그램이 시작 할 때랑 시작 했을 때 좌표 값 기준이 다르기 때문에 주의 해야된다.
-    // 수위 오브젝트 최초 위치 값 Y = 279.62f : 물이 인식 되었을 때 오브젝트 시작 위치 = 282.0f : 마지노선 Y = 285.0f
-
+    // 수위 오브젝트 최초 위치 값 Y = 282.2562f : 물이 인식 되었을 때 오브젝트 시작 위치 Y = f : 마지노선 Y = f
+    // -45635.11 -1005.607 -27774.17
     void Start()
     {
         // "Inside_Water_Level_1" 이름의 오브젝트를 찾아서 변수에 대입
@@ -25,55 +25,43 @@ public class OS_WL_Controller : MonoBehaviour
             Debug.Log("오브젝트 찾기 완료");
 
             // 주기적으로 센서 값을 읽어오는 함수를 호출
-            // 1분 ReadAndAdjustWaterLevels 함수 실행
-            InvokeRepeating("Read_IS_WL", 0.1f, updateInterval);
+            // 30초 Read_OS_WL 함수 실행
+            InvokeRepeating("Read_OS_WL", 0.1f, updateInterval);
         }
     }
 
-    private void Read_IS_WL()
+    private void Read_OS_WL()
     {
-        //Debug.Log(Water_Level_1.transform.position);
-        //Debug.Log(Water_Level_2.transform.position);
-        //Debug.Log(Water_Level_3.transform.position);
+        Debug.Log(Water_Level.transform.position);
 
         // API 데이터에서 아날로그 접촉식 수위 센서 값을 가져와서 파싱하여 저장
-        DB_SensorData_Water_Level = float.Parse(API_Data.sensorData.AD4_RCV_WL_CNNT);
+        DB_RiverFlowData_Water_Level = float.Parse(API_Data.riverFlowData.waterLevel);
 
-        if (DB_SensorData_Water_Level == 0)
+        if (DB_RiverFlowData_Water_Level == 0)
         {
-            // 최초 오브젝트 위치 값 0일 때는 안보여야 됌
-            Water_Level_1.transform.position = new Vector3(2108.73f, 279.62f, 1290.99f);
-            Water_Level_2.transform.position = new Vector3(2000.43f, 279.62f, 1290.99f);
-            Water_Level_3.transform.position = new Vector3(1925.42f, 279.62f, 1017.71f);
+            // 최초 오브젝트 위치 값 0일 때는 안보여야된다.
+            Water_Level.transform.position = new Vector3(2108.73f, 279.62f, 1290.99f);
         }
         // 수위 40 이상이면 더이상 표현 할 필요가 없음 최대값인 285.0f로 고정
-        else if (DB_SensorData_Water_Level > 40)
+        else if (DB_RiverFlowData_Water_Level > 40)
         {
             // 새로운 위치 값을 적용하여 수위 오브젝트의 위치 조정
-            Water_Level_1.transform.position = new Vector3(2108.73f, 285.0f, 1290.99f);
-            Water_Level_2.transform.position = new Vector3(2000.43f, 285.0f, 1290.99f);
-            Water_Level_3.transform.position = new Vector3(1925.42f, 285.0f, 1017.71f);
+            Water_Level.transform.position = new Vector3(2108.73f, 285.0f, 1290.99f);
         }
         // 0 ~ 40 사이의 수위 값만 보여주면 된다.
         else
         {
             // 센서 값을 정규화하여 높이 변화에 사용
-            float normalizedSensorValue = DB_SensorData_Water_Level / 40.0f;
+            float normalizedSensorValue = DB_RiverFlowData_Water_Level / 40.0f;
 
             // 수위 오브젝트의 Y 위치를 282.0f에서 285.0f까지 변화시킴
             float newYPosition_1 = Mathf.Lerp(282.15f, 285.0f, normalizedSensorValue);
-            float newYPosition_2 = Mathf.Lerp(282.15f, 285.0f, normalizedSensorValue);
-            float newYPosition_3 = Mathf.Lerp(282.15f, 285.0f, normalizedSensorValue);
 
             // 새로운 위치 값을 생성하여 수위 오브젝트의 Y 위치를 조정
             Vector3 newPosition_1 = new Vector3(2108.73f, newYPosition_1, 1290.99f);
-            Vector3 newPosition_2 = new Vector3(2000.43f, newYPosition_2, 1290.99f);
-            Vector3 newPosition_3 = new Vector3(1925.42f, newYPosition_3, 1017.71f);
 
             // 새로운 위치 값을 적용하여 수위 오브젝트의 위치 조정
-            Water_Level_1.transform.position = newPosition_1;
-            Water_Level_2.transform.position = newPosition_2;
-            Water_Level_3.transform.position = newPosition_3;
+            Water_Level.transform.position = newPosition_1;
         }
     }
 }
